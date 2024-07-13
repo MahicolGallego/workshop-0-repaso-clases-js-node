@@ -1,0 +1,16 @@
+{
+    "users":[],
+    
+    "travels": [{
+      "id": "6b0f",
+      "number": "200",
+      "origin": "Shanghái Maglev",
+      "destination": "SHANGHAI",
+      "departure": "2024-06-07T21:31",
+      "arrival": "2024-06-07T03:21",
+      "capacity": "100"
+    }],
+    
+    "booking": []
+}
+    
