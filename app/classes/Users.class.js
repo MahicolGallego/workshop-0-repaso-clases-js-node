@@ -1,72 +1,80 @@
 import { navigateTo } from "../Router";
 import { Auth } from "./Auth.class";
+import { BookingManager } from "./Bookings.class";
 
-async function idGenerator() {
-    const fecthUser = await fetch("http://localhost:3000/users")
-    const users = await fecthUser.json()
-    
-    function newIdGenerator() {
-        if (!users.length) {
-            return 1;
-        }
+async function userIdGenerator() {
+  const fecthUser = await fetch("http://localhost:3000/users");
+  const users = await fecthUser.json();
 
-        return (users[users.length - 1].id + 1);
+  function newUserIdGenerator() {
+    if (!users.length) {
+      return 1;
     }
 
-    return newIdGenerator;
+    return users[users.length - 1].id + 1;
+  }
+
+  return newUserIdGenerator;
 }
 
 class Person {
-    
-    constructor(name, birthdate) {
-        const newId = idGenerator();
-        this.id = newId();
-        this.name = name;
-        this.birthdate = birthdate;
+  constructor(name, birthdate) {
+    const newUserId = userIdGenerator();
+    this.id = newUserId();
+    this.name = name;
+    this.birthdate = birthdate;
+  }
+
+  static async registerUser(newUser) {
+    const RegisterUser = await fetch("http://localhost:3000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
+
+    if (!RegisterUser.ok) {
+      alert("Error al registrar el usuario");
+      return;
     }
 
-    static async registerUser(newUser) {
-        const RegisterUser = await fetch("http://localhost:3000/users", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newUser)
-        });
-        if (!RegisterUser.ok) {
-            alert("Error al registrar el usuario");
-            return;
-        }
+    alert("Usuario registrado exitosamente");
 
-        alert("Usuario registrado exitosamente");
+    navigateTo("/login");
+  }
 
-        navigateTo("/login")
-    }
+  static login(user) {
+    Auth.login(user);
+  }
+
+  static logout() {
+    Auth.logout();
+  }
 }
 
+class RegularUSer extends Person {
+  constructor(fullname, birthdate, email, password, rol) {
+    super(fullname, birthdate);
+    this.email = email;
+    this.password = password;
+    this.rol = rol;
+  }
 
-class RegularUSer extends Person{
-    constructor(fullname, birthdate, email, password, rol){
-        super(fullname, birthdate)
-        this.email = email;
-        this.password = password;
-        this.rol = rol;
-    }
-
-    login(user) {
-        Auth.login(user);
-    }
+  addBooking(userId, travelId) {
+    BookingManager.addBooking(userId, travelId);
+  }
 }
 
-class AdministratorUser{
+class AdministratorUser {
+  constructor(fullname, birthdate, email, password, rol) {
+    super(fullname, birthdate);
+    this.email = email;
+    this.password = password;
+    this.rol = rol;
+  }
 
+  addBooking(userId, travelId) {
+    BookingManager.addBooking(userId, travelId);
+  }
 }
-
-class BookingManager{
-    
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-
-})
