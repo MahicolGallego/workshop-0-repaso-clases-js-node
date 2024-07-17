@@ -17,7 +17,7 @@ async function userIdGenerator() {
   return newUserIdGenerator;
 }
 
-class Person {
+export class Person {
   constructor(name, birthdate) {
     const newUserId = userIdGenerator();
     this.id = newUserId();
@@ -53,7 +53,7 @@ class Person {
   }
 }
 
-class RegularUSer extends Person {
+export class RegularUSer extends Person {
   constructor(fullname, birthdate, email, password, rol) {
     super(fullname, birthdate);
     this.email = email;
@@ -66,7 +66,10 @@ class RegularUSer extends Person {
   }
 }
 
-class AdministratorUser {
+export class AdministratorUser extends Person{
+
+  static codeVerification = "aBc123"
+
   constructor(fullname, birthdate, email, password, rol) {
     super(fullname, birthdate);
     this.email = email;
