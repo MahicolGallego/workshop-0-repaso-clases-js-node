@@ -1,5 +1,6 @@
 import { navigateTo } from "../../Router";
 import { AdministratorUser, Person, RegularUSer } from "../../classes/Users.class";
+import { userIdGenerator } from "../../helpers/userIdGenerator.helper";
 
 export function RegisterPage() {
     root.innerHTML = /*html */ `<form>
@@ -25,17 +26,20 @@ export function RegisterPage() {
 
     const $form = document.querySelector("form");
 
-    $form.addEventListener("submit", (e) => {
+    $form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       //tomar los valores
-      const $name = document.querySelector("[type='text']");
-      const $birthDate = document.querySelector("[type='date']");
-      const $email = document.querySelector("[type='email']");
-      const $password = document.querySelector("[type='password']");
+      const $name = document.querySelector("[type='text']").value;
+      const $birthDate = document.querySelector("[type='date']").value;
+      const $email = document.querySelector("[type='email']").value;
+      const $password = document.querySelector("[type='password']").value;
 
       //tomar el select del rol
-      const $rolSelected = document.getElementById("select-rol");
+      const $rolSelected = document.getElementById("select-rol").value;
+
+      const newUserId = await userIdGenerator();
+      const idForUser = newUserId(); // Ahora newUserId es la función newUserIdGenerator // se genera un nuevo ID
 
       //verificamos con el codigo si se intenta registrar como Admin
       if ($rolSelected === "1") {
@@ -49,6 +53,7 @@ export function RegisterPage() {
         }
 
         const newAdmin = new AdministratorUser(
+          idForUser,
           $name,
           $birthDate,
           $email,
@@ -60,6 +65,7 @@ export function RegisterPage() {
 
       }else{
         const newRegularUser = new RegularUSer(
+          idForUser,
           $name,
           $birthDate,
           $email,

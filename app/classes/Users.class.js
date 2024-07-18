@@ -2,25 +2,16 @@ import { navigateTo } from "../Router";
 import { Auth } from "./Auth.class";
 import { BookingManager } from "./Bookings.class";
 
-async function userIdGenerator() {
-  const fecthUser = await fetch("http://localhost:3000/users");
-  const users = await fecthUser.json();
-
-  function newUserIdGenerator() {
-    if (!users.length) {
-      return 1;
-    }
-
-    return users[users.length - 1].id + 1;
-  }
-
-  return newUserIdGenerator;
-}
-
 export class Person {
-  constructor(name, birthdate) {
-    const newUserId = userIdGenerator();
-    this.id = newUserId();
+  constructor(id, name, birthdate) {
+    //implementar async/await en constructores
+    // // Se utiliza async/await para esperar a que userIdGenerator se resuelva y devuelva a newUserIdGenerator
+    // // como una funcion normal, de lo contrario se devolveria una promesa pendiente de resolver
+    // (async () => {
+    //   const newUserId = await userIdGenerator();
+    //   this.id = newUserId(); // Ahora newUserId es la función newUserIdGenerator // se genera un nuevo ID
+    // })();
+    this.id = id
     this.name = name;
     this.birthdate = birthdate;
   }
@@ -39,8 +30,6 @@ export class Person {
       return;
     }
 
-    alert("Usuario registrado exitosamente");
-
     navigateTo("/login");
   }
 
@@ -54,8 +43,8 @@ export class Person {
 }
 
 export class RegularUSer extends Person {
-  constructor(fullname, birthdate, email, password, rol) {
-    super(fullname, birthdate);
+  constructor(id, fullname, birthdate, email, password, rol) {
+    super(id, fullname, birthdate);
     this.email = email;
     this.password = password;
     this.rol = rol;
@@ -70,8 +59,8 @@ export class AdministratorUser extends Person{
 
   static codeVerification = "aBc123"
 
-  constructor(fullname, birthdate, email, password, rol) {
-    super(fullname, birthdate);
+  constructor(id, fullname, birthdate, email, password, rol) {
+    super(id, fullname, birthdate);
     this.email = email;
     this.password = password;
     this.rol = rol;
